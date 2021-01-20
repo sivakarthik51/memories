@@ -52,7 +52,7 @@ const Auth = () => {
 
         try {
             dispatch({type:'AUTH', data: {result,token}});
-            history.pushState('/');
+            history.push('/');
         }
         catch(error){
             console.error(error);
@@ -87,7 +87,7 @@ const Auth = () => {
                         {isSignUp? 'Sign Up': 'Sign In'}
                     </Button>
                     <GoogleLogin
-                        clientId="366317256105-8jiobprmpqic7cd5q7jn00273sq2mp69.apps.googleusercontent.com"
+                        clientId={process.env.REACT_APP_GOOGLE_OAUTH}
                         render={(renderProps) => (
                             <Button className={classes.googleButton} color="primary" fullWidth onClick={renderProps.onClick} disabled={renderProps.disabled} startIcon={<Icon />} variant="contained">Google Sign In</Button>
                         )}
