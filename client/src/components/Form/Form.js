@@ -9,9 +9,9 @@ const Form = ({ currentId, setCurrentId }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const post = useSelector((state) => currentId? state.posts.find((p) => p._id === currentId):null);
+    const user = JSON.parse(localStorage.getItem('profile'));
 
     const [postData,setPostData] = useState({
-        creator:'',
         title:'',
         message:'',
         tags:'',
@@ -24,33 +24,34 @@ const Form = ({ currentId, setCurrentId }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if(currentId) {
-            dispatch(updatePost(currentId, postData));
+            dispatch(updatePost(currentId, {...postData,username:user?.result?.name}));
         } else { 
-            dispatch(createPost(postData));
+            dispatch(createPost({...postData,username:user?.result?.name}));
         }
         clear();
     }
     const clear = () => {
         setCurrentId(null);
         setPostData({
-            creator:'',
             title:'',
             message:'',
             tags:'',
             selectedFile:''
         });
     }
+    if(!user?.result?.name) {
+        return (
+            <Paper className={classes.paper}>
+                <Typography variant="h6" align="center">
+                    Please Sign in to Continue
+                </Typography>
+            </Paper>
+        )
+    }
     return (
         <Paper className={classes.paper}>
             <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}` } onSubmit={handleSubmit}>
                 <Typography variant="h6">{currentId? 'Editing':'Creating'} a Memory</Typography>
-                <TextField 
-                    name="creator" 
-                    variant="outlined" 
-                    label="Creator"
-                    fullWidth
-                    value={postData.creator}
-                    onChange={(e) => setPostData({ ...postData, creator: e.target.value })} />
                 
                 <TextField 
                     name="title" 
